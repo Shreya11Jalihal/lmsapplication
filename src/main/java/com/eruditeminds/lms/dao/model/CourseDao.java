@@ -12,8 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,19 +38,21 @@ public class CourseDao {
 	
 	
 	@Column(name="NAME")
+	@NotNull
 	private String name;
 	
 	
 	@Column(name="INSTRUCTOR")
+	@NotNull
 	private String instructor;
 	
 	
 	@Column(name="PRICE")
+	@NotNull
 	private BigDecimal price;
 	
 	
 	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.LAZY)
-	@JsonIgnoreProperties
 	private Set<ScheduleDao> availableDates = new HashSet<ScheduleDao>();
 	
 

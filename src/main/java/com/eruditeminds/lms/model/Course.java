@@ -4,10 +4,6 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.ElementCollection;
-
-import com.eruditeminds.lms.dao.model.ScheduleDao;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -36,7 +32,6 @@ public class Course {
 	private BigDecimal price;
 	
 	@JsonProperty("availableDates")
-	@JsonIgnoreProperties
 	private Set<Schedule> availableDates = new HashSet<Schedule>();
 
 

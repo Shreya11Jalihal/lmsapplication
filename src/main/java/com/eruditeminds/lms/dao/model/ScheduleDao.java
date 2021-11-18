@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,7 @@ public class ScheduleDao {
 	private long scheduleId;
 	
 	@Column(name="scheduleDate")
+	@NotNull
 	private Timestamp timestamp;
 	
 	@Column(name= "slots")
