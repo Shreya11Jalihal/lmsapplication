@@ -1,0 +1,175 @@
+openapi: 3.0.0
+servers:
+  - url: http://localhost:8080
+info:
+  description: 'This swagger definition exposes the apis for Learning Management Sytem. The apis include CRUD operations for Trainings and TrainingSchedules.'
+  version: 1.0.0
+  title: Learning Management System
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: jalihal.shreya@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+tags:
+  - name: Course CRUD operations
+    description: Endpoints to save,update retrieve Courses
+  
+paths:
+  /api/courses:
+    get: 
+      tags:
+         - Course CRUD Operations
+      summary: Get all the courses
+      description: Returns all the courses
+      operationId: getAllCourses
+      responses:
+        '200':
+          description: successfully retrieved the courses
+    post:
+      tags:
+         - Course CRUD Operations
+      summary: Add a new course 
+      requestBody:
+        description: Saving a new Course
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+      responses:
+        '201':
+          description: Created
+
+  /api/courses/{courseId}:
+    put:
+      tags:
+         - Course CRUD Operations
+      summary: Update a Course 
+      parameters:
+        - in: path
+          name: courseId
+          schema:
+            type: integer
+          required: true
+      description: ''
+      requestBody:
+        description: Course schema with which needs to be done.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+      operationId: updateCourse
+      responses:
+        '200':
+          description: Successfully updated the Course
+        '400':
+          description: Course with Id {courseId} does not exist
+    get:
+      tags:
+         - Course CRUD Operations
+      summary: Get training details with courseId
+      parameters:
+        - in: path
+          name: courseId
+          schema:
+            type: integer
+          required: true
+      description: ''
+      responses:
+        '200':
+          description: Successfully retrieved the Course
+        '400':
+          description: Course With Id {courseId} does not exist
+
+  /api/courses/search:
+    get:
+      tags:
+         - Course CRUD Operations
+      summary: Get Courses for a certain period
+      parameters:
+        - in: query
+          name: startDate
+          schema:
+            type: string
+          description: The start date for the search of courses
+        - in: query
+          name: endDate
+          schema:
+            type: string
+          description: The end date for the search of courses
+      responses:
+        '200':
+          description: Successfully retrieved the courses for a certain period
+        '400':
+          description: Course With Id {courseId} does not exist
+  
+  /api/bookings/{courseId}:
+   post:
+      tags:
+         - Course CRUD Operations
+      summary: Book a course
+      parameters:
+        - in: path
+          name: courseId
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        description: Book a Course
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Booking'
+            
+      responses:
+        '201':
+          description: Created
+          
+components:
+  schemas:
+    Course:
+      properties:
+        id:
+          type: integer
+          example: 12
+        name:
+          type: string
+          example: "Java"
+        instructor:
+          type: string
+          example: "Michael Pörsche"
+        price:
+          type: integer
+          example: 654
+        availableDates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Schedule'
+    Schedule:
+      properties:
+        id:
+          type: integer
+          example: 123
+        slots:
+          type: integer
+          example: 4
+        availableDates:
+          type: string
+          format: date-time
+          example: "2019-05-31T23:59:59+05:30"
+    Booking:
+      properties:
+        userId:
+          type: string
+          example: "userId123"
+        bookingDate:
+          type: string
+          format: date-time
+          example: "2019-05-31T23:59:59+05:30"
+    
+    
+  
+    

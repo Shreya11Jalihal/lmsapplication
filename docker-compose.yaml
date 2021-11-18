@@ -1,0 +1,40 @@
+version: '3.5'
+services:
+
+
+ lmsapp:
+  container_name: lmsapp
+  image:  shreyajalihal/lmsapp:1.0.1
+  volumes:
+   -  ./application-logs:/java/logs 
+   -  ./src/main/resources/application.properties:/opt/app/application.properties
+  ports:
+   -  8080:8080 
+  networks:
+   - dev
+   
+   
+ lmswebapp:
+  container_name: lmswebapp
+  image:  shreyajalihal/lmswebapp:1.0.0 
+  ports:
+   - 9002:9002
+  networks:
+   - dev
+   
+   
+ swagger:
+  container_name: swaggerui
+  image: swaggerapi/swagger-ui
+  volumes:
+   - ./src/main/resources/lms_openapi_def.yaml:/mnt/lms_openapi_def.yaml
+  environment:
+   - SWAGGER_JSON=/mnt/lms_openapi_def.yaml
+  ports:
+   - 8083:8080
+  networks:
+   - dev
+networks:
+ dev:
+  name: dev
+  driver: bridge
