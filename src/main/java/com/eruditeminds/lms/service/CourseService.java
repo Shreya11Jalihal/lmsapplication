@@ -82,6 +82,7 @@ public class CourseService {
 		Optional<CourseDao> optionalCourseDao = courseRepository.findById(courseId);
 		if (optionalCourseDao != null && optionalCourseDao.isPresent()) {
 			CourseDao courseDao = courseMapper.convertToDao(course);
+			courseDao.setCourseId(courseId);
 			courseRepository.save(courseDao);
 			logger.info("Course with Id " + courseId + " updated successfully.");
 		} else

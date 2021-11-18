@@ -21,7 +21,8 @@ import com.eruditeminds.lms.exception.ValidationException;
 import com.eruditeminds.lms.model.Course;
 import com.eruditeminds.lms.service.CourseService;
 
-@CrossOrigin(origins = { "http://localhost:8083", "http://localhost:9002"}, maxAge = 3600)
+//@CrossOrigin(origins = { "http://localhost:8083", "http://localhost:9002"}, maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 public class CourseController {
 
@@ -50,15 +51,9 @@ public class CourseController {
 	@PostMapping("/api/courses")
 	public ResponseEntity<String> createCourse(@RequestBody Course course) {
 		if (course != null && course.getAvailableDates().size() != 0) {
-			course.getAvailableDates().forEach(t -> {
-				if (t.getTimestamp().getTime() < (Timestamp.from(Instant.now()).getTime())) {
-					logger.error("Validation failed Timestamp is invalid.");
-					throw new ValidationException("Initial validation for the schedule Dates failed");
-				}
-				
-			});
+			initValidateTimestamp(course);
 			courseService.saveCourse(course);
-		} 
+		}
 		return new ResponseEntity<>("Successfully Saved the course", HttpStatus.CREATED);
 	}
 
@@ -73,9 +68,27 @@ public class CourseController {
 	 */
 	@PutMapping("/api/courses/{courseId}")
 	public ResponseEntity<String> updateCourse(@RequestBody Course course, @PathVariable("courseId") long courseId) {
-		courseService.updateCourse(course, courseId);
+		if (course != null && course.getAvailableDates().size() != 0) {
+			initValidateTimestamp(course);
+			courseService.updateCourse(course, courseId);
+		}
 		return new ResponseEntity<>("Successfully updated the course in the collection", HttpStatus.OK);
 
 	}
 
+	/*
+	 * method for initial validation of Timestamp
+	 * 
+	 * @Param course Course
+	 *
+	 */
+	public static void initValidateTimestamp(Course course) {
+		course.getAvailableDates().forEach(t -> {
+			if (t.getTimestamp().getTime() < (Timestamp.from(Instant.now()).getTime())) {
+				logger.error("Validation failed Timestamp is invalid.");
+				throw new ValidationException("Initial validation for the schedule Dates failed");
+			}
+
+		});
+	}
 }

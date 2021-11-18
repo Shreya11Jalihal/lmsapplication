@@ -4,7 +4,7 @@ services:
 
  lmsapp:
   container_name: lmsapp
-  image:  shreyajalihal/lmsapp:1.0.3
+  image:  shreyajalihal/lmsapp:1.0.5
   volumes:
    -  ./application-logs:/java/logs 
    -  ./src/main/resources/application.properties:/opt/app/application.properties
