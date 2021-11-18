@@ -4,7 +4,7 @@ services:
 
  lmsapp:
   container_name: lmsapp
-  image:  shreyajalihal/lmsapp:1.0.2
+  image:  shreyajalihal/lmsapp:1.0.3
   volumes:
    -  ./application-logs:/java/logs 
    -  ./src/main/resources/application.properties:/opt/app/application.properties
@@ -16,7 +16,7 @@ services:
    
  lmswebapp:
   container_name: lmswebapp
-  image:  shreyajalihal/lmswebapp:1.0.1
+  image:  shreyajalihal/lmswebapp:1.0.2
   ports:
    - 9002:9002
   networks:
