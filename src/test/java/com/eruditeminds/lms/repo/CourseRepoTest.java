@@ -30,7 +30,7 @@ public class CourseRepoTest {
 	private CourseRepository courseRepository;
 
 	@BeforeEach
-	void Setup() {
+	void Setup() {	
 		ScheduleDao scheduleDao1 = new ScheduleDao(Long.valueOf(1),Timestamp.valueOf("2022-09-11 09:01:15"),5);
 		ScheduleDao scheduleDao2 = new ScheduleDao(Long.valueOf(2),Timestamp.valueOf("2024-09-11 09:01:15"),6);
 		schedules.add(scheduleDao1);

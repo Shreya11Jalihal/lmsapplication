@@ -1,6 +1,8 @@
 package com.eruditeminds.lms.repository;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,14 +11,17 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.eruditeminds.lms.dao.model.CourseDao;
+import com.eruditeminds.lms.model.Course;
 
 @Repository
 public interface CourseRepository extends JpaRepository<CourseDao, Long> {
 
 	
-	//@Query("SELECT a FROM CourseDao c JOIN c.availableDates a WHERE c.name=:name AND c.instructor=:instructor")
 	@Query("SELECT a.timestamp FROM CourseDao c JOIN c.availableDates a WHERE c.name=:name AND c.instructor=:instructor")
 	public Set<Timestamp> findByNameAndInstructor (@Param("name") String name,@Param("instructor") String instrcutor);
+
+	@Query("SELECT c FROM CourseDao c JOIN c.availableDates a WHERE a.timestamp BETWEEN :startDate AND :endDate")
+	public List<Course> findForACertainPeriod(@Param("startDate") LocalDate startDate,@Param("endDate") LocalDate endDate);
 	
 	
 }

@@ -33,7 +33,7 @@
     </appender>
     
 	
-	<springProfile name="!prod">
+	<!-- <springProfile name="!prod">
    		 <logger name="com.eruditeminds.lms" level="debug" additivity="false">
         	<appender-ref ref="RollingFile" />
         	<appender-ref ref="Console" />
@@ -45,6 +45,6 @@
         	<appender-ref ref="RollingFile" />
         	<appender-ref ref="Console" />
     	</logger>
-    </springProfile>
+    </springProfile> -->
 
 </configuration> 

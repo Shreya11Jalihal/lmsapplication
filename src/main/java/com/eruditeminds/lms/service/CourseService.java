@@ -1,6 +1,8 @@
 package com.eruditeminds.lms.service;
 
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -48,17 +50,20 @@ public class CourseService {
 	 */
 
 	public Course saveCourse(Course course) {
+		if (course != null && course.getAvailableDates().size() != 0) {
+			initValidateTimestamp(course);
+		}
 		Set<Timestamp> timeStamps = courseRepository.findByNameAndInstructor(course.getName(), course.getInstructor());
 		CourseDao courseDao = null;
 		if (timeStamps.isEmpty()) {
-					courseDao = courseMapper.convertToDao(course);
-					courseRepository.save(courseDao);
+			courseDao = courseMapper.convertToDao(course);
+			courseRepository.save(courseDao);
 		} else {
 			course.getAvailableDates().forEach(t1 -> {
 				timeStamps.forEach(t -> {
-						if (t.getYear() == t1.getTimestamp().getYear() && t.getMonth() == t1.getTimestamp().getMonth()
-								&& t.getDate() == t1.getTimestamp().getDate())
-							throw new ValidationException("The Course: " + course.getName() + "already exists");
+					if (t.getYear() == t1.getTimestamp().getYear() && t.getMonth() == t1.getTimestamp().getMonth()
+							&& t.getDate() == t1.getTimestamp().getDate())
+						throw new ValidationException("The Course: " + course.getName() + "already exists");
 				});
 			});
 			courseDao = courseMapper.convertToDao(course);
@@ -79,6 +84,9 @@ public class CourseService {
 	 * 
 	 */
 	public Course updateCourse(Course course, long courseId) {
+		if (course != null && course.getAvailableDates().size() != 0)
+			initValidateTimestamp(course);
+
 		Optional<CourseDao> optionalCourseDao = courseRepository.findById(courseId);
 		if (optionalCourseDao != null && optionalCourseDao.isPresent()) {
 			CourseDao courseDao = courseMapper.convertToDao(course);
@@ -89,6 +97,37 @@ public class CourseService {
 			throw new ResourceNotFoundException("Course with courseId " + courseId + "not found");
 		logger.error("Resource with Id " + courseId + " not found");
 		return course;
+	}
+
+	/*
+	 * method for initial validation of Timestamp
+	 * 
+	 * @Param course Course
+	 *
+	 */
+	public static void initValidateTimestamp(Course course) {
+		course.getAvailableDates().forEach(t -> {
+			if (t.getTimestamp().getTime() < (Timestamp.from(Instant.now()).getTime())) {
+				logger.error("Validation failed Timestamp is invalid.");
+				throw new ValidationException("Initial validation for the schedule Dates failed");
+			}
+
+		});
+	}
+
+	/*
+	 * Get Courses for a time period range
+	 * 
+	 * @Param startDate String
+	 * 
+	 * @Param endDate String
+	 *
+	 * List<Course> course
+	 */
+	public List<Course> getAllCoursesForACertainPeriod(LocalDate startDate, LocalDate endDate) {
+	List<Course> courses = courseRepository.findForACertainPeriod(startDate, endDate);
+		logger.info("Courses for the requested period returned. size" + courses.size());
+		return courses;
 	}
 
 }
