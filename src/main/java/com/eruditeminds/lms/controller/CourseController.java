@@ -1,7 +1,8 @@
 package com.eruditeminds.lms.controller;
 
-import java.sql.Timestamp;
-import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -15,14 +16,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.eruditeminds.lms.exception.ValidationException;
 import com.eruditeminds.lms.model.Course;
 import com.eruditeminds.lms.service.CourseService;
 
-//@CrossOrigin(origins = { "http://localhost:8083", "http://localhost:9002"}, maxAge = 3600)
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class CourseController {
 
@@ -37,8 +37,22 @@ public class CourseController {
 	 * @return List of courses
 	 */
 	@GetMapping(path = "/api/courses")
-	public List<Course> getAllCourses() {
-		return courseService.getAllCourses();
+	public List<Course> getAllCourses(@RequestParam(required = false) String startDate,
+			@RequestParam(required = false) String endDate) {
+		if (startDate != null && endDate != null) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate ipstartDate = null;
+			LocalDate ipendDate = null;
+			try {
+				ipstartDate = LocalDate.parse(startDate, formatter);
+				ipendDate = LocalDate.parse(endDate, formatter);
+				return courseService.getAllCoursesForACertainPeriod(ipstartDate, ipendDate);
+			} catch (DateTimeParseException e) {
+				logger.error("could not parse the input dates");
+				throw new DateTimeParseException("", endDate, 0);
+			}
+		} else
+			return courseService.getAllCourses();
 	}
 
 	/*
@@ -50,10 +64,9 @@ public class CourseController {
 	 */
 	@PostMapping("/api/courses")
 	public ResponseEntity<String> createCourse(@RequestBody Course course) {
-		if (course != null && course.getAvailableDates().size() != 0) {
-			initValidateTimestamp(course);
-			courseService.saveCourse(course);
-		}
+
+		courseService.saveCourse(course);
+
 		return new ResponseEntity<>("Successfully Saved the course", HttpStatus.CREATED);
 	}
 
@@ -68,27 +81,8 @@ public class CourseController {
 	 */
 	@PutMapping("/api/courses/{courseId}")
 	public ResponseEntity<String> updateCourse(@RequestBody Course course, @PathVariable("courseId") long courseId) {
-		if (course != null && course.getAvailableDates().size() != 0) {
-			initValidateTimestamp(course);
-			courseService.updateCourse(course, courseId);
-		}
+		courseService.updateCourse(course, courseId);
 		return new ResponseEntity<>("Successfully updated the course in the collection", HttpStatus.OK);
 
-	}
-
-	/*
-	 * method for initial validation of Timestamp
-	 * 
-	 * @Param course Course
-	 *
-	 */
-	public static void initValidateTimestamp(Course course) {
-		course.getAvailableDates().forEach(t -> {
-			if (t.getTimestamp().getTime() < (Timestamp.from(Instant.now()).getTime())) {
-				logger.error("Validation failed Timestamp is invalid.");
-				throw new ValidationException("Initial validation for the schedule Dates failed");
-			}
-
-		});
 	}
 }

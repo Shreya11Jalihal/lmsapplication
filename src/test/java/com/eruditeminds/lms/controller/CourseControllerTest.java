@@ -23,14 +23,13 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.eruditeminds.lms.dao.model.ScheduleDao;
 import com.eruditeminds.lms.mapper.CourseMapper;
 import com.eruditeminds.lms.model.Course;
 import com.eruditeminds.lms.model.Schedule;
 import com.eruditeminds.lms.service.CourseService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-//@ExtendWith(MockitoExtension.class)
+
 @WebMvcTest(CourseController.class)
 public class CourseControllerTest {
 
@@ -93,7 +92,6 @@ public class CourseControllerTest {
 				.getResponse();
 
 		Assertions.assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-//	   Assertions.assertThat(response.getContentAsString()).contains("{\"courseId\":2,\"name\":\"Python\",\"instructor\":\"SheelaBantle\",\"price\":455.5,\"availableDates\":[{\"scheduleId\":1,\"timestamp\":\"2022-09-11T09:01:15.000+00:00\",\"slots\":5},{\"scheduleId\":2,\"timestamp\":\"2024-09-11T09:01:15.000+00:00\",\"slots\":6}]}");
 
 	}
 	
