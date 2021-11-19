@@ -24,5 +24,5 @@ UPDATE - /api/courses/{courseId} -> Update a course <br />
 
 ## Launch
 Steps to run the application
-Step 1: Download the docker-compose.yaml file from source Repo: https://github.com/Shreya11Jalihal/lmsapp 
+Step 1: Download the docker-compose.yaml file from source Repo: https://github.com/Shreya11Jalihal/lmsapplication 
 Step 2: Run docker-compose up
