@@ -21,6 +21,7 @@ LMS (Learning Management System) is an application developed in SpringBoot and j
 POST - /api/courses -> Create and save a course. <br />
 GET -  /api/courses -> Get all courses. <br />
 UPDATE - /api/courses/{courseId} -> Update a course <br />
+DELETE -/api/courses/{courseId} -> Delete a course <br />
 
 ## Launch
 Steps to run the application
