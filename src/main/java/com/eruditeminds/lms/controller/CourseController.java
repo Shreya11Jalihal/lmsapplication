@@ -1,7 +1,6 @@
 package com.eruditeminds.lms.controller;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,12 +40,11 @@ public class CourseController {
 	public List<Course> getAllCourses(@RequestParam(required = false) String startDate,
 			@RequestParam(required = false) String endDate) {
 		if (startDate != null && endDate != null) {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			LocalDate ipstartDate = null;
 			LocalDate ipendDate = null;
 			try {
-				ipstartDate = LocalDate.parse(startDate, formatter);
-				ipendDate = LocalDate.parse(endDate, formatter);
+				ipstartDate = LocalDate.parse(startDate);
+				ipendDate = LocalDate.parse(endDate);
 				return courseService.getAllCoursesForACertainPeriod(ipstartDate, ipendDate);
 			} catch (DateTimeParseException e) {
 				logger.error("could not parse the input dates");
@@ -64,9 +63,7 @@ public class CourseController {
 	 */
 	@PostMapping("/api/courses")
 	public ResponseEntity<String> createCourse(@RequestBody Course course) {
-
 		courseService.saveCourse(course);
-
 		return new ResponseEntity<>("Successfully Saved the course", HttpStatus.CREATED);
 	}
 
@@ -83,6 +80,22 @@ public class CourseController {
 	public ResponseEntity<String> updateCourse(@RequestBody Course course, @PathVariable("courseId") long courseId) {
 		courseService.updateCourse(course, courseId);
 		return new ResponseEntity<>("Successfully updated the course in the collection", HttpStatus.OK);
+
+	}
+	
+	/*
+	 * delete an existing Course
+	 * 
+	 * @Param course Course
+	 * 
+	 * @PathVariable courseId long
+	 * 
+	 * @return ResponseEntity
+	 */
+	@DeleteMapping("/api/courses/{courseId}")
+	public ResponseEntity<String> deleteCourse(@PathVariable("courseId") long courseId) {
+		courseService.deleteCourse(courseId);
+		return new ResponseEntity<>("Successfully deleted the course in the collection", HttpStatus.OK);
 
 	}
 }

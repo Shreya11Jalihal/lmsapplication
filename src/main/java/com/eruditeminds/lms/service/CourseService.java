@@ -1,5 +1,6 @@
 package com.eruditeminds.lms.service;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -125,9 +126,16 @@ public class CourseService {
 	 * List<Course> course
 	 */
 	public List<Course> getAllCoursesForACertainPeriod(LocalDate startDate, LocalDate endDate) {
-	List<Course> courses = courseRepository.findForACertainPeriod(startDate, endDate);
-		logger.info("Courses for the requested period returned. size" + courses.size());
-		return courses;
+	List<CourseDao> courseDaos = courseRepository.findForACertainPeriod(Date.valueOf(startDate), Date.valueOf(endDate));
+		logger.info("Courses for the requested period returned. size" + courseDaos.size());
+	return courseMapper.convertToCollectionCourse(courseDaos);
+		
+	}
+
+	public void deleteCourse(long courseId) {
+		CourseDao courseDao= courseRepository.getById(courseId);
+		if(courseDao!=null)
+			courseRepository.delete(courseDao);
 	}
 
 }
