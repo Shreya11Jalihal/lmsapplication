@@ -21,20 +21,21 @@ import com.eruditeminds.lms.repository.CourseRepository;
 @DataJpaTest
 public class CourseRepoTest {
 
+	Set<ScheduleDao> schedules = new HashSet<ScheduleDao>();
 	Timestamp timeStamp1= null;
 	Timestamp timeStamp2= null;
 	Set<Timestamp> timeStamps= new HashSet<Timestamp>();
-	Set<ScheduleDao> schedules = new HashSet<ScheduleDao>();
 
 	@Mock
 	private CourseRepository courseRepository;
 
 	@BeforeEach
 	void Setup() {	
-		ScheduleDao scheduleDao1 = new ScheduleDao(Long.valueOf(1),Timestamp.valueOf("2022-09-11 09:01:15"),5);
-		ScheduleDao scheduleDao2 = new ScheduleDao(Long.valueOf(2),Timestamp.valueOf("2024-09-11 09:01:15"),6);
+		ScheduleDao scheduleDao1 = ScheduleDao.builder().scheduleId(Long.valueOf(1)).timestamp(Timestamp.valueOf("2022-09-11 09:01:15")).slots(Long.valueOf(5)).build();
+		ScheduleDao scheduleDao2 = ScheduleDao.builder().scheduleId(Long.valueOf(2)).timestamp(Timestamp.valueOf("2024-09-11 09:01:15")).slots(Long.valueOf(6)).build();
 		schedules.add(scheduleDao1);
 		schedules.add(scheduleDao2);
+		
 		timeStamp1= Timestamp.valueOf("2022-09-11 09:01:15");
 		timeStamp2= Timestamp.valueOf("2024-09-11 09:01:15");
 		timeStamps.add(timeStamp1);
@@ -64,7 +65,7 @@ public class CourseRepoTest {
 
 	@Test
 	public void testGetSchedulesByNameAndInstructor() {
-		CourseDao courseDao = new CourseDao("AWS", "Akash Gupta", BigDecimal.valueOf(345.6), schedules);
+		CourseDao courseDao = CourseDao.builder().name("AWS").instructor("Akash Gupta").price(BigDecimal.valueOf(345.6)).availableDates(schedules).build();
 		when(courseRepository.save(courseDao)).thenReturn(courseDao);
 		when(courseRepository.findByNameAndInstructor("AWS", "Akash Gupta")).thenReturn(timeStamps);
 		Set<Timestamp> retrievedSchedules = courseRepository.findByNameAndInstructor("AWS", "Akash Gupta");

@@ -36,7 +36,7 @@ import com.eruditeminds.lms.repository.CourseRepository;
 @RunWith(MockitoJUnitRunner.class)
 public class CourseServiceTest {
 
-	Set<ScheduleDao> schedules = new HashSet<ScheduleDao>();
+	Set<ScheduleDao> listScheduleDao = new HashSet<ScheduleDao>();
 	Set<Schedule> listSchedule = new HashSet<Schedule>();
 	Timestamp timeStamp1= null;
 	Timestamp timeStamp2= null;
@@ -58,23 +58,18 @@ public class CourseServiceTest {
 	}
 
 	@BeforeEach
-	void Setup()  throws Exception {
-			Schedule schedule1 = new Schedule(Timestamp.valueOf("2022-09-11 09:01:15"),5);
-			Schedule schedule2 = new Schedule(Timestamp.valueOf("2024-09-11 09:01:15"),6);
-			listSchedule.add(schedule1);
-			listSchedule.add(schedule2);
+	void Setup() throws Exception {
+		
+		ScheduleDao scheduleDao1 = ScheduleDao.builder().scheduleId(Long.valueOf(1)).timestamp(Timestamp.valueOf("2022-09-11 09:01:15")).slots(Long.valueOf(5)).build();
+		ScheduleDao scheduleDao2 = ScheduleDao.builder().scheduleId(Long.valueOf(2)).timestamp(Timestamp.valueOf("2024-09-11 09:01:15")).slots(Long.valueOf(6)).build();
+		listScheduleDao.add(scheduleDao1);
+		listScheduleDao.add(scheduleDao2);
+		
+		Schedule schedule1 = Schedule.builder().scheduleId(Long.valueOf(1)).timestamp(Timestamp.valueOf("2022-09-11 09:01:15")).slots(Long.valueOf(5)).build();
+		Schedule schedule2 = Schedule.builder().scheduleId(Long.valueOf(2)).timestamp(Timestamp.valueOf("2024-09-11 09:01:15")).slots(Long.valueOf(6)).build();
+		listSchedule.add(schedule1);
+		listSchedule.add(schedule2);
 			
-			ScheduleDao scheduleDao1 = new ScheduleDao(Timestamp.valueOf("2022-09-11 09:01:15"),5);
-			ScheduleDao scheduleDao2 = new ScheduleDao(Timestamp.valueOf("2024-09-11 09:01:15"),6);
-			schedules.add(scheduleDao1);
-			schedules.add(scheduleDao2);
-			
-			
-			Course course1=Course.builder()
-						.courseId(1).name("Python").price(BigDecimal.valueOf(234.7)).availableDates(listSchedule).build();
-			
-			Course course2=Course.builder()
-					.courseId(2).name("Java").price(BigDecimal.valueOf(234.7)).availableDates(listSchedule).build();
 			
 			timeStamp1= Timestamp.valueOf("2022-09-11 09:01:15");
 			timeStamp2= Timestamp.valueOf("2024-09-11 09:01:15");
@@ -88,14 +83,14 @@ public class CourseServiceTest {
 
 		List<CourseDao> courseDaos = Arrays.asList(
 				CourseDao.builder().name("Java").instructor("Michael Porsche").price(BigDecimal.valueOf(234.5))
-						.availableDates(schedules).build(),
+						.availableDates(listScheduleDao).build(),
 				CourseDao.builder().name("Python").instructor("Sheela Bantle").price(BigDecimal.valueOf(455.5))
-						.availableDates(schedules).build());
+						.availableDates(listScheduleDao).build());
 		List<Course> courses = Arrays.asList(
 				Course.builder().name("Java").instructor("Michael Porsche").price(BigDecimal.valueOf(234.5))
-						.availableDates(courseMapper.convertToCollectionScheduleModel(schedules)).build(),
+						.availableDates(listSchedule).build(),
 				Course.builder().name("Python").instructor("Sheela Bantle").price(BigDecimal.valueOf(455.5))
-						.availableDates(courseMapper.convertToCollectionScheduleModel(schedules)).build());
+						.availableDates(listSchedule).build());
 		when(courseRepository.findAll()).thenReturn(courseDaos);
 		when(courseMapper.convertToCollectionCourse(courseDaos)).thenReturn(courses);
 
@@ -109,9 +104,10 @@ public class CourseServiceTest {
 
 	@Test
 	public void testCreateCourse() {
-		Course course = new Course("AWS", "Akash Gupta", BigDecimal.valueOf(345.6), courseMapper.convertToCollectionScheduleModel(schedules));
+		
+		Course course = Course.builder().name("AWS").instructor("Akash Gupta").price( BigDecimal.valueOf(345.6)).availableDates(listSchedule).build();
 		when(courseService.saveCourse(course)).thenReturn(course);
-		CourseDao courseDao = new CourseDao("AWS", "Akash Gupta", BigDecimal.valueOf(345.6), schedules);
+		CourseDao courseDao = new CourseDao("AWS", "Akash Gupta", BigDecimal.valueOf(345.6), listScheduleDao);
 		when(courseMapper.convertToDao(course)).thenReturn(courseDao);
 
 		Course savedCourse= courseService.saveCourse(course);
@@ -122,8 +118,8 @@ public class CourseServiceTest {
 
 	@Test
 	public void testValidationException() {
-		when(courseMapper.convertToCollectionScheduleModel(schedules)).thenReturn(listSchedule);
-		Course course = new Course("AWS", "Akash Gupta", BigDecimal.valueOf(345.6), courseMapper.convertToCollectionScheduleModel(schedules));
+		when(courseMapper.convertToCollectionScheduleModel(listScheduleDao)).thenReturn(listSchedule);
+		Course course = Course.builder().name("AWS").instructor("Akash Gupta").price( BigDecimal.valueOf(345.6)).availableDates(listSchedule).build();
 		when(courseRepository.findByNameAndInstructor("AWS", "Akash Gupta")).thenReturn(timeStamps);
 		assertThrows(ValidationException.class,
 				() -> courseService.saveCourse(course));
@@ -133,8 +129,8 @@ public class CourseServiceTest {
 	public void testUpdateCourse() {
 		
 		//given
-		CourseDao courseDao = new CourseDao("AWS", "Stewart", BigDecimal.valueOf(154.6), schedules);
-		Course course = new Course("AWS", "Akash Rathi", BigDecimal.valueOf(145.6), courseMapper.convertToCollectionScheduleModel(schedules));
+		CourseDao courseDao = new CourseDao("AWS", "Stewart", BigDecimal.valueOf(154.6), listScheduleDao);
+		Course course = Course.builder().name("AWS").instructor("Akash Gupta").price( BigDecimal.valueOf(345.6)).availableDates(listSchedule).build();
 		when(courseRepository.findById(Long.valueOf(1))).thenReturn(Optional.of(courseDao));
 		when(courseMapper.convertToDao(course)).thenReturn(courseDao);
 		
@@ -151,7 +147,7 @@ public class CourseServiceTest {
 	@Test
 	public void testResourceDoesNotExistsException() {
 		when(courseRepository.findById(Long.valueOf(1))).thenReturn(null);
-		Course course = new Course("AWS", "Akash Gupta", BigDecimal.valueOf(345.6), courseMapper.convertToCollectionScheduleModel(schedules));
+		Course course = Course.builder().name("AWS").instructor("Akash Gupta").price( BigDecimal.valueOf(345.6)).availableDates(listSchedule).build();
 		assertThrows(ResourceNotFoundException.class,
 				() -> courseService.updateCourse(course, 1));
 	}
