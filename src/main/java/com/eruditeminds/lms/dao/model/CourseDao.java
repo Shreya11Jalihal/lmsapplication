@@ -14,16 +14,12 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Getter
 @Setter
@@ -54,16 +50,6 @@ public class CourseDao {
 	
 	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.LAZY)
 	private Set<ScheduleDao> availableDates = new HashSet<ScheduleDao>();
-	
-
-	public CourseDao(String name, String instructor, BigDecimal price, Set<ScheduleDao> availableDates) {
-		super();
-		this.name = name;
-		this.instructor = instructor;
-		this.price = price;
-		this.availableDates = availableDates;
-	}
-	
 	
 
 }

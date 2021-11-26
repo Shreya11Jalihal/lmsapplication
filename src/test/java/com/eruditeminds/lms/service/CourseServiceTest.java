@@ -107,7 +107,7 @@ public class CourseServiceTest {
 		
 		Course course = Course.builder().name("AWS").instructor("Akash Gupta").price( BigDecimal.valueOf(345.6)).availableDates(listSchedule).build();
 		when(courseService.saveCourse(course)).thenReturn(course);
-		CourseDao courseDao = new CourseDao("AWS", "Akash Gupta", BigDecimal.valueOf(345.6), listScheduleDao);
+		CourseDao courseDao = CourseDao.builder().name("AWS").instructor("Akash Gupta").price( BigDecimal.valueOf(345.6)).availableDates(listScheduleDao).build();
 		when(courseMapper.convertToDao(course)).thenReturn(courseDao);
 
 		Course savedCourse= courseService.saveCourse(course);
@@ -129,7 +129,7 @@ public class CourseServiceTest {
 	public void testUpdateCourse() {
 		
 		//given
-		CourseDao courseDao = new CourseDao("AWS", "Stewart", BigDecimal.valueOf(154.6), listScheduleDao);
+		CourseDao courseDao = CourseDao.builder().name("AWS").instructor("Stewart").price( BigDecimal.valueOf(145.6)).availableDates(listScheduleDao).build();
 		Course course = Course.builder().name("AWS").instructor("Akash Gupta").price( BigDecimal.valueOf(345.6)).availableDates(listSchedule).build();
 		when(courseRepository.findById(Long.valueOf(1))).thenReturn(Optional.of(courseDao));
 		when(courseMapper.convertToDao(course)).thenReturn(courseDao);
