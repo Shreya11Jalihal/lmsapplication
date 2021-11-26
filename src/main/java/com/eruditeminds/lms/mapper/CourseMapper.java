@@ -36,7 +36,7 @@ public class CourseMapper {
 	}
 
 	public Set<Schedule> convertToCollectionScheduleModel(Set<ScheduleDao> scheduleDaos) {
-		if (scheduleDaos != null && !scheduleDaos.isEmpty())
+		if (!scheduleDaos.isEmpty())
 
 			return scheduleDaos.stream().map(temp -> {
 				return Schedule.builder().scheduleId(temp.getScheduleId()).timestamp(temp.getTimestamp())
@@ -48,7 +48,7 @@ public class CourseMapper {
 	}
 
 	public Set<ScheduleDao> convertToCollectionScheduleDao(Set<Schedule> schedules) {
-		if (schedules != null && !schedules.isEmpty())
+		if (!schedules.isEmpty())
 
 			return schedules.stream().map(temp -> {
 				return ScheduleDao.builder().scheduleId(temp.getScheduleId()).timestamp(temp.getTimestamp())
@@ -74,7 +74,7 @@ public class CourseMapper {
 
 	public List<CourseDao> convertToCollectionCourseDao(List<Course> courses) {
 		List<CourseDao> courseDaos = new ArrayList<CourseDao>();
-		if (courses.size() !=0 && !courses.isEmpty()) {
+		if (!courses.isEmpty()) {
 			for (Course course : courses) {
 				courseDaos.add(convertToDao(course));
 			}

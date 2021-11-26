@@ -15,8 +15,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Course {
 
 	@JsonProperty("courseId")
@@ -34,16 +32,5 @@ public class Course {
 	@JsonProperty("availableDates")
 	private Set<Schedule> availableDates = new HashSet<Schedule>();
 
-
-	public Course(String name, String instructor, BigDecimal price, Set<Schedule> availableDates) {
-		super();
-		this.name = name;
-		this.instructor = instructor;
-		this.price = price;
-		this.availableDates = availableDates;
-	}
-	
-	
-	
 
 }

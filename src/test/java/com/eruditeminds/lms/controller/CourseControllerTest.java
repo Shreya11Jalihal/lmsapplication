@@ -70,7 +70,8 @@ public class CourseControllerTest {
 		// when
 		MockHttpServletResponse response = mockMvc
 				.perform(MockMvcRequestBuilders.post("/api/courses").contentType(MediaType.APPLICATION_JSON).content(
-						jsonCourse.write(new Course("Java", "Mannon", BigDecimal.valueOf(134.8), schedules)).getJson()))
+						jsonCourse.write(Course.builder().courseId(Long.valueOf(1)).name("Java").instructor("Michael Porsche").price(BigDecimal.valueOf(234.5))
+								.availableDates(schedules).build()).getJson()))
 				.andReturn().getResponse();
 		// then
 		Assertions.assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());

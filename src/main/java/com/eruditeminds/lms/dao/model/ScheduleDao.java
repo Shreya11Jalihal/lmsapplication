@@ -9,16 +9,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class ScheduleDao {
@@ -34,12 +30,5 @@ public class ScheduleDao {
 	@Column(name= "slots")
 	private long slots;
 	
-	
-	public ScheduleDao(Timestamp timestamp, long slots) {
-		super();
-		this.timestamp = timestamp;
-		this.slots = slots;
-		
-	}
 
 }
