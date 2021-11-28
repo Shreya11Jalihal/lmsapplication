@@ -53,7 +53,7 @@ public class CourseDao {
 	
 
 	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.EAGER)
-	private Set<ScheduleDao> availableDates = new HashSet<ScheduleDao>();
+	private Set<ScheduleDao> availableDates = new HashSet<>();
 	
 
 }

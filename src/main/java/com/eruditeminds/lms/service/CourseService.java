@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -52,10 +53,11 @@ public class CourseService {
 	 */
 
 	public Course saveCourse(Course course) {
-		if (course != null && course.getAvailableDates().size() != 0) {
+		Set<Timestamp> timeStamps = new HashSet<Timestamp>();
+		if (course != null && !course.getAvailableDates().isEmpty()) {
 			initValidateTimestamp(course);
 		}
-		Set<Timestamp> timeStamps = courseRepository.findByNameAndInstructor(course.getName(), course.getInstructor());
+		 courseRepository.findByNameAndInstructor(course.getName(), course.getInstructor());
 		CourseDao courseDao = null;
 		if (timeStamps.isEmpty()) {
 			courseDao = courseMapper.convertToDao(course);
@@ -86,9 +88,9 @@ public class CourseService {
 	 * @return course Course
 	 * 
 	 */
-	@Transactional
+	
 	public Course updateCourse(Course course, long courseId) {
-		if (course != null && course.getAvailableDates().size() != 0)
+		if (course != null && !course.getAvailableDates().isEmpty())
 			initValidateTimestamp(course);
 
 		Optional<CourseDao> optionalCourseDao = courseRepository.findById(courseId);
@@ -138,7 +140,6 @@ public class CourseService {
 
 	public void deleteCourse(long courseId) {
 		CourseDao courseDao= courseRepository.getById(courseId);
-		if(courseDao!=null)
 			courseRepository.deleteById(courseId);
 	}
 

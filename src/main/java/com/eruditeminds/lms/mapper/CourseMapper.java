@@ -60,7 +60,7 @@ public class CourseMapper {
 	}
 
 	public List<Course> convertToCollectionCourse(List<CourseDao> courseDaos) {
-		List<Course> courses = new ArrayList<Course>();
+		List<Course> courses = new ArrayList<>();
 		if (!courseDaos.isEmpty()) {
 			for (CourseDao courseDao : courseDaos) {
 				courses.add(convertToModel(courseDao));
@@ -73,7 +73,7 @@ public class CourseMapper {
 	}
 
 	public List<CourseDao> convertToCollectionCourseDao(List<Course> courses) {
-		List<CourseDao> courseDaos = new ArrayList<CourseDao>();
+		List<CourseDao> courseDaos = new ArrayList<>();
 		if (!courses.isEmpty()) {
 			for (Course course : courses) {
 				courseDaos.add(convertToDao(course));
