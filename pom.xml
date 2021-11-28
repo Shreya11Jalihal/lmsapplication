@@ -14,9 +14,14 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>lmsApp</name>
 	<description>Creative and interactive online courses for employees</description>
+	
 	<properties>
-		<java.version>8</java.version>
+		<java.version>11</java.version>
+		<sonar.organization>Shreya11Jalihal</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
+	
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -46,7 +51,6 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -73,6 +77,40 @@
 		</dependency>
 	</dependencies>
 
+	<profiles>
+		<profile>
+			<id>sonar</id>
+			<properties>
+				<sonar.sources>.</sonar.sources>
+				<sonar.inclusions>src/main/java/**,src/main/resources/**</sonar.inclusions>			
+				<sonar.projectKey>Shreya11Jalihal_lmsapplication</sonar.projectKey>
+				<sonar.organization>shreya11jalihal</sonar.organization>
+				<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+			</properties>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.sonarsource.scanner.maven</groupId>
+						<artifactId>sonar-maven-plugin</artifactId>
+						<version>3.7.0.1746</version>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<goals>
+									<goal>sonar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -89,5 +127,6 @@
 			</plugin>
 		</plugins>
 	</build>
+
 
 </project>
