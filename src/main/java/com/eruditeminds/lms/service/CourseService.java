@@ -92,7 +92,7 @@ public class CourseService {
 			initValidateTimestamp(course);
 
 		Optional<CourseDao> optionalCourseDao = courseRepository.findById(courseId);
-		if (optionalCourseDao != null && optionalCourseDao.isPresent()) {
+		if (optionalCourseDao.isPresent()) {
 			CourseDao courseDao = courseMapper.convertToDao(course);
 			courseDao.setCourseId(courseId);
 			
