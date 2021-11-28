@@ -1,8 +1,6 @@
 package com.eruditeminds.lms.dao.model;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

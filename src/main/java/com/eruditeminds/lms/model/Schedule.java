@@ -1,10 +1,7 @@
 package com.eruditeminds.lms.model;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Set;
 
-import com.eruditeminds.lms.dao.model.ScheduleDao;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
