@@ -51,8 +51,8 @@ public class CourseDao {
 	@NotNull
 	private BigDecimal price;
 	
-	
-	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.LAZY)
+
+	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.EAGER)
 	private Set<ScheduleDao> availableDates = new HashSet<ScheduleDao>();
 	
 

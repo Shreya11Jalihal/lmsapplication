@@ -98,7 +98,7 @@ public class CourseControllerTest {
 	}
 
 	@Test
-	public void updateAcourse() throws Exception {
+	public void testupdateCourse() throws Exception {
 
 		Course course = Course.builder().name("Java").instructor("Michael Porsche").price(BigDecimal.valueOf(234.5))
 				.availableDates(schedules).build();
@@ -116,5 +116,7 @@ public class CourseControllerTest {
 				.contains("Successfully updated the course in the collection");
 
 	}
+	
+	
 
 }
