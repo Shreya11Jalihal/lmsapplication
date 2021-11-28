@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.eruditeminds.lms.dao.model.CourseDao;
 import com.eruditeminds.lms.exception.ResourceNotFoundException;
@@ -53,7 +52,7 @@ public class CourseService {
 	 */
 
 	public Course saveCourse(Course course) {
-		Set<Timestamp> timeStamps = new HashSet<Timestamp>();
+		Set<Timestamp> timeStamps = new HashSet<>();
 		if (course != null && !course.getAvailableDates().isEmpty()) {
 			initValidateTimestamp(course);
 		}
@@ -139,8 +138,9 @@ public class CourseService {
 	}
 
 	public void deleteCourse(long courseId) {
-		CourseDao courseDao= courseRepository.getById(courseId);
-			courseRepository.deleteById(courseId);
+		Optional<CourseDao> courseDao= courseRepository.findById(courseId);
+		if(courseDao.isPresent())	
+		courseRepository.deleteById(courseId);
 	}
 
 }
