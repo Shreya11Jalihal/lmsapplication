@@ -52,28 +52,30 @@ public class CourseService {
 	 */
 
 	public Course saveCourse(Course course) {
-		Set<Timestamp> timeStamps = new HashSet<>();
+
 		if (course != null && !course.getAvailableDates().isEmpty()) {
 			initValidateTimestamp(course);
-		}
-		 courseRepository.findByNameAndInstructor(course.getName(), course.getInstructor());
-		CourseDao courseDao = null;
-		if (timeStamps.isEmpty()) {
-			courseDao = courseMapper.convertToDao(course);
-			courseRepository.save(courseDao);
-		} else {
-			course.getAvailableDates().forEach(t1 -> {
-				timeStamps.forEach(t -> {
-					if (t.getYear() == t1.getTimestamp().getYear() && t.getMonth() == t1.getTimestamp().getMonth()
-							&& t.getDate() == t1.getTimestamp().getDate())
-						throw new ValidationException("The Course: " + course.getName() + "already exists");
+			Set<Timestamp> timeStamps = courseRepository.findByNameAndInstructor(course.getName(),
+					course.getInstructor());
+			CourseDao courseDao = null;
+			if (timeStamps.isEmpty()) {
+				courseDao = courseMapper.convertToDao(course);
+				courseRepository.save(courseDao);
+			} else {
+				course.getAvailableDates().forEach(t1 -> {
+					timeStamps.forEach(t -> {
+						if (t.getYear() == t1.getTimestamp().getYear() && t.getMonth() == t1.getTimestamp().getMonth()
+								&& t.getDate() == t1.getTimestamp().getDate())
+							throw new ValidationException("The Course: " + course.getName() + "already exists");
+					});
 				});
-			});
-			courseDao = courseMapper.convertToDao(course);
-			courseRepository.save(courseDao);
-			
+				courseDao = courseMapper.convertToDao(course);
+				courseRepository.save(courseDao);
+
+			}
+			logger.info("Saved the course Details successfully in the database");
 		}
-		logger.info("Saved the course Details successfully in the database");
+
 		return course;
 	}
 
@@ -87,7 +89,7 @@ public class CourseService {
 	 * @return course Course
 	 * 
 	 */
-	
+
 	public Course updateCourse(Course course, long courseId) {
 		if (course != null && !course.getAvailableDates().isEmpty())
 			initValidateTimestamp(course);
@@ -96,7 +98,7 @@ public class CourseService {
 		if (optionalCourseDao.isPresent()) {
 			CourseDao courseDao = courseMapper.convertToDao(course);
 			courseDao.setCourseId(courseId);
-			
+
 			courseRepository.save(courseDao);
 			logger.info("Course with Id " + courseId + " updated successfully.");
 		} else
@@ -131,16 +133,17 @@ public class CourseService {
 	 * List<Course> course
 	 */
 	public List<Course> getAllCoursesForACertainPeriod(LocalDate startDate, LocalDate endDate) {
-	List<CourseDao> courseDaos = courseRepository.findForACertainPeriod(Date.valueOf(startDate), Date.valueOf(endDate));
+		List<CourseDao> courseDaos = courseRepository.findForACertainPeriod(Date.valueOf(startDate),
+				Date.valueOf(endDate));
 		logger.info("Courses for the requested period returned. size" + courseDaos.size());
-	return courseMapper.convertToCollectionCourse(courseDaos);
-		
+		return courseMapper.convertToCollectionCourse(courseDaos);
+
 	}
 
 	public void deleteCourse(long courseId) {
-		Optional<CourseDao> courseDao= courseRepository.findById(courseId);
-		if(courseDao.isPresent())	
-		courseRepository.deleteById(courseId);
+		Optional<CourseDao> courseDao = courseRepository.findById(courseId);
+		if (courseDao.isPresent())
+			courseRepository.deleteById(courseId);
 	}
 
 }
