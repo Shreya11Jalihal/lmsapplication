@@ -29,7 +29,6 @@ import com.eruditeminds.lms.model.Schedule;
 import com.eruditeminds.lms.service.CourseService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 @WebMvcTest(CourseController.class)
 public class CourseControllerTest {
 
@@ -42,36 +41,39 @@ public class CourseControllerTest {
 
 	@MockBean
 	private CourseService courseService;
-	
+
 	@Mock
 	private CourseMapper courseMapper;
 
-	private JacksonTester<Course> jsonCourse ;
+	private JacksonTester<Course> jsonCourse;
 
 	@BeforeEach
 	void Setup() {
-		 JacksonTester.initFields(this, new ObjectMapper());
-		
-		 	Schedule schedule1 = new Schedule(Long.valueOf(1),Timestamp.valueOf("2022-09-11 09:01:15"),5);
-			Schedule schedule2 = new Schedule(Long.valueOf(2),Timestamp.valueOf("2024-09-11 09:01:15"),6);
-			schedules.add(schedule1);
-			schedules.add(schedule2);
-			
-			
+		JacksonTester.initFields(this, new ObjectMapper());
+
+		Schedule schedule1 = Schedule.builder().scheduleId(Long.valueOf(1))
+				.timestamp(Timestamp.valueOf("2022-09-11 09:01:15")).slots(5).build();
+		Schedule schedule2 = Schedule.builder().scheduleId(Long.valueOf(2))
+				.timestamp(Timestamp.valueOf("2021-10-01 09:01:15")).slots(6).build();
+		schedules.add(schedule1);
+		schedules.add(schedule2);
+
 	}
 
 	@Test
 	public void canCreateANewCourse() throws Exception {
-		Course course=Course.builder().courseId(Long.valueOf(1)).name("Java").instructor("Michael Porsche").price(BigDecimal.valueOf(234.5))
-		.availableDates(schedules).build();
-		//given
+		Course course = Course.builder().courseId(Long.valueOf(1)).name("Java").instructor("Michael Porsche")
+				.price(BigDecimal.valueOf(234.5)).availableDates(schedules).build();
+		// given
 		when(courseService.saveCourse(course)).thenReturn(course);
 
 		// when
 		MockHttpServletResponse response = mockMvc
-				.perform(MockMvcRequestBuilders.post("/api/courses").contentType(MediaType.APPLICATION_JSON).content(
-						jsonCourse.write(Course.builder().courseId(Long.valueOf(1)).name("Java").instructor("Michael Porsche").price(BigDecimal.valueOf(234.5))
-								.availableDates(schedules).build()).getJson()))
+				.perform(
+						MockMvcRequestBuilders.post("/api/courses").contentType(MediaType.APPLICATION_JSON)
+								.content(jsonCourse.write(Course.builder().courseId(Long.valueOf(1)).name("Java")
+										.instructor("Michael Porsche").price(BigDecimal.valueOf(234.5))
+										.availableDates(schedules).build()).getJson()))
 				.andReturn().getResponse();
 		// then
 		Assertions.assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
@@ -80,12 +82,11 @@ public class CourseControllerTest {
 	@Test
 	public void testGetAllCourses() throws Exception {
 		List<Course> courses = Arrays.asList(
-				Course.builder().courseId(Long.valueOf(1)).name("Java").instructor("Michael Porsche").price(BigDecimal.valueOf(234.5))
-						.availableDates(schedules).build(),
-				Course.builder().courseId(Long.valueOf(2)).name("Python").instructor("Sheela Bantle").price(BigDecimal.valueOf(455.5))
-						.availableDates(schedules).build());
-		
-	
+				Course.builder().courseId(Long.valueOf(1)).name("Java").instructor("Michael Porsche")
+						.price(BigDecimal.valueOf(234.5)).availableDates(schedules).build(),
+				Course.builder().courseId(Long.valueOf(2)).name("Python").instructor("Sheela Bantle")
+						.price(BigDecimal.valueOf(455.5)).availableDates(schedules).build());
+
 		when(courseService.getAllCourses()).thenReturn(courses);
 
 		MockHttpServletResponse response = mockMvc
@@ -95,28 +96,27 @@ public class CourseControllerTest {
 		Assertions.assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 
 	}
-	
-	
+
 	@Test
-	public void updateAcourse() throws Exception {
-	
-		Course course= Course.builder().name("Java").instructor("Michael Porsche").price(BigDecimal.valueOf(234.5))
-						.availableDates(schedules).build();
-		Course updatedCourse= Course.builder().name("Java").instructor("George").price(BigDecimal.valueOf(274.5))
+	public void testupdateCourse() throws Exception {
+
+		Course course = Course.builder().name("Java").instructor("Michael Porsche").price(BigDecimal.valueOf(234.5))
 				.availableDates(schedules).build();
-		
+		Course updatedCourse = Course.builder().name("Java").instructor("George").price(BigDecimal.valueOf(274.5))
+				.availableDates(schedules).build();
+
 		when(courseService.updateCourse(course, 2)).thenReturn(updatedCourse);
 
-		MockHttpServletResponse response = mockMvc
-				.perform(MockMvcRequestBuilders.put("/api/courses/2").contentType(MediaType.APPLICATION_JSON).content(jsonCourse.write(course).getJson())).andReturn()
+		MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.put("/api/courses/2")
+				.contentType(MediaType.APPLICATION_JSON).content(jsonCourse.write(course).getJson())).andReturn()
 				.getResponse();
 
 		Assertions.assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-		Assertions.assertThat(response.getContentAsString()).contains("Successfully updated the course in the collection");
+		Assertions.assertThat(response.getContentAsString())
+				.contains("Successfully updated the course in the collection");
 
 	}
+	
+	
 
-	
-	
-	
 }

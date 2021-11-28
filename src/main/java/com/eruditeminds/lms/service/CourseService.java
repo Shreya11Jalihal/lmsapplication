@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eruditeminds.lms.dao.model.CourseDao;
 import com.eruditeminds.lms.exception.ResourceNotFoundException;
@@ -69,6 +70,7 @@ public class CourseService {
 			});
 			courseDao = courseMapper.convertToDao(course);
 			courseRepository.save(courseDao);
+			
 		}
 		logger.info("Saved the course Details successfully in the database");
 		return course;
@@ -84,6 +86,7 @@ public class CourseService {
 	 * @return course Course
 	 * 
 	 */
+	@Transactional
 	public Course updateCourse(Course course, long courseId) {
 		if (course != null && course.getAvailableDates().size() != 0)
 			initValidateTimestamp(course);
@@ -92,6 +95,7 @@ public class CourseService {
 		if (optionalCourseDao != null && optionalCourseDao.isPresent()) {
 			CourseDao courseDao = courseMapper.convertToDao(course);
 			courseDao.setCourseId(courseId);
+			
 			courseRepository.save(courseDao);
 			logger.info("Course with Id " + courseId + " updated successfully.");
 		} else
@@ -135,7 +139,7 @@ public class CourseService {
 	public void deleteCourse(long courseId) {
 		CourseDao courseDao= courseRepository.getById(courseId);
 		if(courseDao!=null)
-			courseRepository.delete(courseDao);
+			courseRepository.deleteById(courseId);
 	}
 
 }

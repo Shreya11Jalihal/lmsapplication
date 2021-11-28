@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doNothing;
+
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -151,4 +153,16 @@ public class CourseServiceTest {
 		assertThrows(ResourceNotFoundException.class,
 				() -> courseService.updateCourse(course, 1));
 	}
+	
+	@Test
+	public void testDeleteCourse() {
+		CourseDao courseDao = CourseDao.builder().name("AWS").instructor("Stewart").price( BigDecimal.valueOf(145.6)).availableDates(listScheduleDao).build();
+		when(courseRepository.getById(1L)).thenReturn(courseDao);
+		doNothing().when(courseRepository).deleteById(1L);
+		
+		courseService.deleteCourse(1L);
+		verify(courseRepository, times(1)).deleteById(1L);
+		
+	}
+	
 }
