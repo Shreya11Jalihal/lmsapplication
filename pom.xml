@@ -21,6 +21,15 @@
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	
+	<!-- Adding URL to publish wms app on github -->
+	<distributionManagement>
+	  <repository>
+	    <id>github</id>
+	    <name>Learning Management application</name>
+	    <url>https://maven.pkg.github.com/Shreya11Jalihal/lmsapplication</url> 
+	  </repository>
+	</distributionManagement>
+	
 	
 	<dependencies>
 		<dependency>
