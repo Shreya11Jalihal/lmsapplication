@@ -1,4 +1,4 @@
-name: CI Workflow for WMS
+name: CI Workflow for LMS
 
 on:
   push:
@@ -35,7 +35,6 @@ jobs:
       - name: SonarCloud Scan
         run: mvn -B clean verify -Dmaven.test.skip=true -Psonar -Dsonar.login=${{ secrets.SONAR_TOKEN }}
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   artifact:
@@ -52,5 +51,4 @@ jobs:
       - name: Publish artifact on GitHub Packages
         run: mvn -B clean deploy -Dmaven.test.skip=true
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
