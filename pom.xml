@@ -10,7 +10,7 @@
 		<relativePath /> 
 	</parent>
 	<groupId>com.eruditeminds.lms</groupId>
-	<artifactId>lmsApp</artifactId>
+	<artifactId>lmsapp</artifactId>
 	<version>1.0.0</version>
 	<name>lmsApp</name>
 	<description>Creative and interactive online courses for employees</description>
