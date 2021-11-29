@@ -19,7 +19,7 @@ import com.eruditeminds.lms.dao.model.CourseDao;
 import com.eruditeminds.lms.dao.model.ScheduleDao;
 import com.eruditeminds.lms.repository.CourseRepository;
 @DataJpaTest
-public class CourseRepoTest {
+ class CourseRepoTest {
 
 	Set<ScheduleDao> schedules = new HashSet<ScheduleDao>();
 	Timestamp timeStamp1= null;
@@ -43,7 +43,7 @@ public class CourseRepoTest {
 	}
 
 	@Test
-	public void saveCourseTest() {
+	 void saveCourseTest() {
 		CourseDao courseDao = CourseDao.builder().name("Java").instructor("Michael Porsche")
 				.price(BigDecimal.valueOf(234.5)).availableDates(schedules).build();
 		when(courseRepository.save(courseDao)).thenReturn(courseDao);
@@ -52,7 +52,7 @@ public class CourseRepoTest {
 	}
 
 	@Test
-	public void getListOfCourses() {
+	 void getListOfCourses() {
 		List<CourseDao> courseDaos = Arrays.asList(
 				CourseDao.builder().name("Java").instructor("Michael Porsche").price(BigDecimal.valueOf(234.5))
 						.availableDates(schedules).build(),
@@ -64,7 +64,7 @@ public class CourseRepoTest {
 	}
 
 	@Test
-	public void testGetSchedulesByNameAndInstructor() {
+	 void testGetSchedulesByNameAndInstructor() {
 		CourseDao courseDao = CourseDao.builder().name("AWS").instructor("Akash Gupta").price(BigDecimal.valueOf(345.6)).availableDates(schedules).build();
 		when(courseRepository.save(courseDao)).thenReturn(courseDao);
 		when(courseRepository.findByNameAndInstructor("AWS", "Akash Gupta")).thenReturn(timeStamps);

@@ -30,7 +30,7 @@ import com.eruditeminds.lms.service.CourseService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(CourseController.class)
-public class CourseControllerTest {
+class CourseControllerTest {
 
 	Timestamp timestamp1 = null;
 	Timestamp timestamp2 = null;
@@ -61,7 +61,7 @@ public class CourseControllerTest {
 	}
 
 	@Test
-	public void canCreateANewCourse() throws Exception {
+	 void canCreateANewCourse() throws Exception {
 		Course course = Course.builder().courseId(Long.valueOf(1)).name("Java").instructor("Michael Porsche")
 				.price(BigDecimal.valueOf(234.5)).availableDates(schedules).build();
 		// given
@@ -80,7 +80,7 @@ public class CourseControllerTest {
 	}
 
 	@Test
-	public void testGetAllCourses() throws Exception {
+	 void testGetAllCourses() throws Exception {
 		List<Course> courses = Arrays.asList(
 				Course.builder().courseId(Long.valueOf(1)).name("Java").instructor("Michael Porsche")
 						.price(BigDecimal.valueOf(234.5)).availableDates(schedules).build(),
@@ -98,7 +98,7 @@ public class CourseControllerTest {
 	}
 
 	@Test
-	public void testupdateCourse() throws Exception {
+	 void testupdateCourse() throws Exception {
 
 		Course course = Course.builder().name("Java").instructor("Michael Porsche").price(BigDecimal.valueOf(234.5))
 				.availableDates(schedules).build();

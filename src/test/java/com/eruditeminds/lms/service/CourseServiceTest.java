@@ -36,7 +36,7 @@ import com.eruditeminds.lms.model.Schedule;
 import com.eruditeminds.lms.repository.CourseRepository;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CourseServiceTest {
+ class CourseServiceTest {
 
 	Set<ScheduleDao> listScheduleDao = new HashSet<ScheduleDao>();
 	Set<Schedule> listSchedule = new HashSet<Schedule>();
@@ -81,7 +81,7 @@ public class CourseServiceTest {
 	
 
 	@Test
-	public void testGetAllCourses() {
+	 void testGetAllCourses() {
 
 		List<CourseDao> courseDaos = Arrays.asList(
 				CourseDao.builder().name("Java").instructor("Michael Porsche").price(BigDecimal.valueOf(234.5))
@@ -105,7 +105,7 @@ public class CourseServiceTest {
 	}
 
 	@Test
-	public void testCreateCourse() {
+	 void testCreateCourse() {
 		
 		Course course = Course.builder().name("AWS").instructor("Akash Gupta").price( BigDecimal.valueOf(345.6)).availableDates(listSchedule).build();
 		when(courseService.saveCourse(course)).thenReturn(course);
@@ -119,7 +119,7 @@ public class CourseServiceTest {
 	}
 
 	@Test
-	public void testValidationException() {
+	 void testValidationException() {
 		when(courseMapper.convertToCollectionScheduleModel(listScheduleDao)).thenReturn(listSchedule);
 		Course course = Course.builder().name("AWS").instructor("Akash Gupta").price( BigDecimal.valueOf(345.6)).availableDates(listSchedule).build();
 		when(courseRepository.findByNameAndInstructor("AWS", "Akash Gupta")).thenReturn(timeStamps);
@@ -128,7 +128,7 @@ public class CourseServiceTest {
 	}
 
 	@Test
-	public void testUpdateCourse() {
+	 void testUpdateCourse() {
 		
 		//given
 		CourseDao courseDao = CourseDao.builder().name("AWS").instructor("Stewart").price( BigDecimal.valueOf(145.6)).availableDates(listScheduleDao).build();
@@ -147,17 +147,17 @@ public class CourseServiceTest {
 	}
 
 	@Test
-	public void testResourceDoesNotExistsException() {
-		when(courseRepository.findById(Long.valueOf(1))).thenReturn(null);
+	 void testResourceDoesNotExistsException() {
+		when(courseRepository.findById(Long.valueOf(2))).thenReturn(Optional.empty());
 		Course course = Course.builder().name("AWS").instructor("Akash Gupta").price( BigDecimal.valueOf(345.6)).availableDates(listSchedule).build();
 		assertThrows(ResourceNotFoundException.class,
-				() -> courseService.updateCourse(course, 1));
+				() -> courseService.updateCourse(course, 2));
 	}
 	
 	@Test
-	public void testDeleteCourse() {
-		CourseDao courseDao = CourseDao.builder().name("AWS").instructor("Stewart").price( BigDecimal.valueOf(145.6)).availableDates(listScheduleDao).build();
-		when(courseRepository.getById(1L)).thenReturn(courseDao);
+	 void testDeleteCourse() {
+		Optional<CourseDao> optionalCourseDao = Optional.of(CourseDao.builder().name("AWS").instructor("Stewart").price( BigDecimal.valueOf(145.6)).availableDates(listScheduleDao).build());
+		when(courseRepository.findById(Long.valueOf(1))).thenReturn(optionalCourseDao);
 		doNothing().when(courseRepository).deleteById(1L);
 		
 		courseService.deleteCourse(1L);
