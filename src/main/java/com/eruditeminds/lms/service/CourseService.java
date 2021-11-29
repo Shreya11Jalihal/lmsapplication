@@ -49,7 +49,6 @@ public class CourseService {
 	 * @return course of type Course
 	 * 
 	 */
-
 	public Course saveCourse(Course course) {
 
 		if (course != null && !course.getAvailableDates().isEmpty()) {
@@ -88,7 +87,6 @@ public class CourseService {
 	 * @return course Course
 	 * 
 	 */
-
 	public Course updateCourse(Course course, long courseId) {
 		if (course != null && !course.getAvailableDates().isEmpty())
 			initValidateTimestamp(course);
@@ -140,6 +138,12 @@ public class CourseService {
 
 	}
 
+	/*
+	 * Delete a course
+	 * 
+	 * @Param courseId long
+	 * 
+	 */
 	public void deleteCourse(long courseId) {
 		Optional<CourseDao> courseDao = courseRepository.findById(courseId);
 		if (courseDao.isPresent())
