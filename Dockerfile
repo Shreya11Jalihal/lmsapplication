@@ -1,11 +1,15 @@
+#
 # Build stage
+#
 FROM maven:3.6.0-jdk-11-slim AS build
-WORKDIR /java
-COPY /. /java
-COPY /pom.xml /java
-RUN mvn -f /java/pom.xml clean test package
+COPY src /home/app/src
+COPY pom.xml /home/app
+RUN mvn -f /home/app/pom.xml clean package
 
-# Run stage
-FROM adoptopenjdk/openjdk11:alpine-jre 
-COPY --from=build /java/target/lmsApp*.jar app.jar
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","app.jar"]
+#
+# Package stage
+#
+FROM openjdk:11-jre-slim
+COPY --from=build /home/app/target/*.jar /usr/local/lib/app.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","/usr/local/lib/app.jar"]
